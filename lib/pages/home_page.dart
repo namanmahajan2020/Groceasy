@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:grocerytute/model/cart_model.dart';
+import 'package:grocerytute/pages/cart_page.dart';
 import 'package:provider/provider.dart';
 import '../components/grocery_item_tile.dart';
 
@@ -10,6 +11,20 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed:
+            () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) {
+                  return CartPage();
+                },
+              ),
+            ),
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+        child: Icon(Icons.shopping_bag, color: Colors.white),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -45,11 +60,11 @@ class HomePage extends StatelessWidget {
                 builder: (context, value, child) {
                   return GridView.builder(
                     itemCount: value.shopItems.length,
-                    padding:EdgeInsets.all(12),
+                    padding: EdgeInsets.all(12),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          childAspectRatio: 1/1.3,
+                          childAspectRatio: 1 / 1.3,
                         ),
                     itemBuilder: (context, index) {
                       return GroceryItemTile(
@@ -57,6 +72,12 @@ class HomePage extends StatelessWidget {
                         itemPrice: value.shopItems[index][1],
                         imagePath: value.shopItems[index][2],
                         color: value.shopItems[index][3],
+                        onPressed: () {
+                          Provider.of<CartModel>(
+                            context,
+                            listen: false,
+                          ).addItemToCart(index);
+                        },
                       );
                     },
                   );
